@@ -1,0 +1,3 @@
+huzaifa,1234,Student
+ali,12345,Student
+wahab,123456,Student

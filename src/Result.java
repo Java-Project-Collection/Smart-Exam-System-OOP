@@ -4,14 +4,12 @@ public class Result {
     private int score;
     private String grade;
 
-    // Constructor
     public Result(String username, int score, String grade) {
         this.username = username;
         this.score = score;
         this.grade = grade;
     }
 
-    // Getters
     public String getUsername() {
         return username;
     }
@@ -24,31 +22,19 @@ public class Result {
         return grade;
     }
 
-    // Setters
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    // Display Result
     public void displayResult() {
 
-        System.out.println("\n===== RESULT =====");
-        System.out.println("Username: " + username);
-        System.out.println("Score: " + score);
-        System.out.println("Grade: " + grade);
+        System.out.println("\n=================================");
+        System.out.println("            RESULT");
+        System.out.println("=================================");
+        System.out.println("Student : " + username);
+        System.out.println("Score   : " + score);
+        System.out.println("Grade   : " + grade);
+        System.out.println("=================================");
     }
 
     @Override
     public String toString() {
         return username + "," + score + "," + grade;
     }
-
 }

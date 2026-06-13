@@ -5,18 +5,14 @@ public class FileManager {
 
     private final String USER_FILE = "user.txt";
     private final String QUESTION_FILE = "question.txt";
-    private final String ANSWER_FILE = "answer.txt";
     private final String RESULT_FILE = "result.txt";
 
     public FileManager() {
-
         createFile(USER_FILE);
         createFile(QUESTION_FILE);
-        createFile(ANSWER_FILE);
         createFile(RESULT_FILE);
     }
 
-    // Create file if it does not exist
     private void createFile(String fileName) {
 
         try {
@@ -27,9 +23,9 @@ public class FileManager {
                 file.createNewFile();
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
-            System.out.println("Error while creating file: " + fileName);
+            System.out.println("Error creating file: " + fileName);
         }
     }
 
@@ -37,14 +33,16 @@ public class FileManager {
 
     public void saveUser(User user) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_FILE, true))) {
+        try (BufferedWriter bw =
+                     new BufferedWriter(
+                             new FileWriter(USER_FILE, true))) {
 
-            writer.write(user.toString());
-            writer.newLine();
+            bw.write(user.toString());
+            bw.newLine();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
-            System.out.println("Error saving user.");
+            System.out.println("Error saving user");
         }
     }
 
@@ -52,32 +50,33 @@ public class FileManager {
 
         ArrayList<User> users = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
+        try (BufferedReader br =
+                     new BufferedReader(
+                             new FileReader(USER_FILE))) {
 
             String line;
 
-            while ((line = reader.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
 
                 String[] parts = line.split(",");
 
-                if (parts.length != 3) {
-                    continue;
-                }
+                if (parts.length == 3) {
 
-                String username = parts[0];
-                String password = parts[1];
-                String role = parts[2];
+                    if(parts[2].equalsIgnoreCase("Student")) {
 
-                if (role.equalsIgnoreCase("Admin")) {
-                    users.add(new Admin(username, password));
-                } else {
-                    users.add(new Student(username, password));
+                        users.add(
+                                new Student(
+                                        parts[0],
+                                        parts[1]
+                                )
+                        );
+                    }
                 }
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
-            System.out.println("Error loading users.");
+            System.out.println("Error loading users");
         }
 
         return users;
@@ -87,8 +86,11 @@ public class FileManager {
 
         ArrayList<User> users = loadUsers();
 
-        for (User user : users) {
-            if (user.getUsername().equalsIgnoreCase(username)) {
+        for(User user : users) {
+
+            if(user.getUsername()
+                    .equalsIgnoreCase(username)) {
+
                 return true;
             }
         }
@@ -98,19 +100,18 @@ public class FileManager {
 
     // ================= QUESTION METHODS =================
 
-    public void saveQuestion(Question question) {
+    public void saveQuestion(Question q) {
 
-        try (BufferedWriter writer =
+        try (BufferedWriter bw =
                      new BufferedWriter(
-                             new FileWriter(
-                                     QUESTION_FILE, true))) {
+                             new FileWriter(QUESTION_FILE, true))) {
 
-            writer.write(question.toString());
-            writer.newLine();
+            bw.write(q.toString());
+            bw.newLine();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
-            System.out.println("Error saving question.");
+            System.out.println("Error saving question");
         }
     }
 
@@ -119,182 +120,115 @@ public class FileManager {
         ArrayList<Question> questions =
                 new ArrayList<>();
 
-        try (BufferedReader reader =
+        try (BufferedReader br =
                      new BufferedReader(
-                             new FileReader(
-                                     QUESTION_FILE))) {
+                             new FileReader(QUESTION_FILE))) {
 
             String line;
 
-            while ((line = reader.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
 
-                String[] parts = line.split(",");
+                String[] p = line.split(",");
 
-                if (parts.length != 6) {
-                    continue;
+                if (p.length == 6) {
+
+                    String[] options = {
+                            p[1],
+                            p[2],
+                            p[3],
+                            p[4]
+                    };
+
+                    questions.add(
+                            new Question(
+                                    p[0],
+                                    options,
+                                    Integer.parseInt(p[5])
+                            )
+                    );
                 }
-
-                String[] options = {
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        parts[4]
-                };
-
-                questions.add(
-                        new Question(
-                                parts[0],
-                                options,
-                                Integer.parseInt(parts[5])
-                        )
-                );
             }
 
         } catch (Exception e) {
 
-            System.out.println("Error loading questions.");
+            System.out.println("Error loading questions");
         }
 
         return questions;
-    }
-
-    public void overwriteQuestions(
-            ArrayList<Question> questions) {
-
-        try (BufferedWriter writer =
-                     new BufferedWriter(
-                             new FileWriter(
-                                     QUESTION_FILE))) {
-
-            for (Question question : questions) {
-
-                writer.write(question.toString());
-                writer.newLine();
-            }
-
-        } catch (IOException e) {
-
-            System.out.println("Error updating questions.");
-        }
     }
 
     // ================= RESULT METHODS =================
 
     public void saveResult(Result result) {
 
-        try (BufferedWriter writer =
+        try (BufferedWriter bw =
                      new BufferedWriter(
-                             new FileWriter(
-                                     RESULT_FILE, true))) {
+                             new FileWriter(RESULT_FILE, true))) {
 
-            writer.write(result.toString());
-            writer.newLine();
+            bw.write(result.toString());
+            bw.newLine();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
-            System.out.println("Error saving result.");
+            System.out.println("Error saving result");
         }
     }
 
-    public ArrayList<Result> loadResults() {
+    public boolean hasAttemptedExam(String username) {
 
-        ArrayList<Result> results =
-                new ArrayList<>();
-
-        try (BufferedReader reader =
+        try (BufferedReader br =
                      new BufferedReader(
-                             new FileReader(
-                                     RESULT_FILE))) {
+                             new FileReader(RESULT_FILE))) {
 
             String line;
 
-            while ((line = reader.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
 
                 String[] parts = line.split(",");
 
-                if (parts.length != 3) {
-                    continue;
+                if(parts[0]
+                        .equalsIgnoreCase(username)) {
+
+                    return true;
                 }
-
-                results.add(
-                        new Result(
-                                parts[0],
-                                Integer.parseInt(parts[1]),
-                                parts[2]
-                        )
-                );
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
-            System.out.println("Error loading results.");
-        }
-
-        return results;
-    }
-
-    public boolean hasAttemptedExam(
-            String username) {
-
-        ArrayList<Result> results =
-                loadResults();
-
-        for (Result result : results) {
-
-            if (result.getUsername()
-                    .equalsIgnoreCase(username)) {
-
-                return true;
-            }
+            System.out.println("Error checking result");
         }
 
         return false;
     }
 
-    public Result getResult(
-            String username) {
+    public Result getResult(String username) {
 
-        ArrayList<Result> results =
-                loadResults();
+        try (BufferedReader br =
+                     new BufferedReader(
+                             new FileReader(RESULT_FILE))) {
 
-        for (Result result : results) {
+            String line;
 
-            if (result.getUsername()
-                    .equalsIgnoreCase(username)) {
+            while ((line = br.readLine()) != null) {
 
-                return result;
+                String[] parts = line.split(",");
+
+                if(parts[0]
+                        .equalsIgnoreCase(username)) {
+
+                    return new Result(
+                            parts[0],
+                            Integer.parseInt(parts[1]),
+                            parts[2]
+                    );
+                }
             }
+
+        } catch (Exception e) {
+
+            System.out.println("Error loading result");
         }
 
         return null;
-    }
-
-    // ================= ANSWER METHODS =================
-
-    public void saveAnswers(
-            String username,
-            int[] answers,
-            int totalQuestions) {
-
-        try (BufferedWriter writer =
-                     new BufferedWriter(
-                             new FileWriter(
-                                     ANSWER_FILE, true))) {
-
-            writer.write(username);
-
-            for (int i = 0;
-                 i < totalQuestions;
-                 i++) {
-
-                writer.write("," + answers[i]);
-            }
-
-            writer.newLine();
-
-        } catch (IOException e) {
-
-            System.out.println("Error saving answers.");
-        }
     }
 }

@@ -2,67 +2,78 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AuthenticationService {
-    private FileManager fileManager;
+
+    private FileManager fm;
     private Scanner sc;
 
-    public AuthenticationService(FileManager fileManager, Scanner sc) {        this.fileManager = fileManager;
+    public AuthenticationService(FileManager fm, Scanner sc) {
+        this.fm = fm;
         this.sc = sc;
     }
-    public void registerStudent(){
-        System.out.println("Enter Username: ");
-        String username = sc.nextLine();
-        if(fileManager.usernameExists(username)){
-            System.out.println("Username Already Exists!");
+
+    // ================= REGISTER =================
+
+    public void registerStudent() {
+
+        System.out.println("\n=================================");
+        System.out.println("      STUDENT REGISTRATION");
+        System.out.println("=================================");
+
+        System.out.print("Enter Username: ");
+        String username = sc.nextLine().trim();
+
+        if (fm.usernameExists(username)) {
+
+            System.out.println("\nUsername already exists!");
             return;
         }
-        System.out.println("Enter Password: ");
-        String password = sc.nextLine();
 
-        Student student= new Student(username,password);
-        fileManager.saveUser(student);
+        System.out.print("Enter Password: ");
+        String password = sc.nextLine().trim();
 
-        System.out.println("Registration Successful!");
+        Student student =
+                new Student(username, password);
+
+        fm.saveUser(student);
+
+        System.out.println("\nRegistration Successful!");
     }
-    public void registerAdmin(){
-        System.out.println("Enter AdminName: ");
-        String adminName = sc.nextLine();
-        if (fileManager.usernameExists(adminName)){
-            System.out.println("Admin Already Exists!");
-            return;
-        }
-        System.out.println("Enter password:  ");
-        String password = sc.nextLine();
 
-        Admin admin = new Admin(adminName,password);
-        fileManager.saveUser(admin);
+    // ================= LOGIN =================
 
-        System.out.println("Admin created Successfully!");
-    }
-    public User login(){
-        System.out.println("Enter username: ");
-        String username= sc.nextLine();
+    public User login() {
 
-        System.out.println("Enter password: ");
-        String password = sc.nextLine();
+        System.out.println("\n=================================");
+        System.out.println("          LOGIN");
+        System.out.println("=================================");
 
-        ArrayList<User>users =  fileManager.loadUsers();
+        System.out.print("Enter Username: ");
+        String username = sc.nextLine().trim();
+
+        System.out.print("Enter Password: ");
+        String password = sc.nextLine().trim();
+
+        ArrayList<User> users =
+                fm.loadUsers();
 
         for (User user : users) {
 
-            if (user.getUsername().equals(username)
+            if (user.getUsername()
+                    .equalsIgnoreCase(username)
                     &&
-                    user.getPassword().equals(password)) {
+                    user.getPassword()
+                            .equals(password)) {
 
                 System.out.println(
-                        "Login Successful!");
+                        "\nLogin Successful!");
 
                 return user;
             }
         }
+
         System.out.println(
-                "Invalid Username or Password.");
+                "\nInvalid Username or Password!");
 
         return null;
     }
-
 }

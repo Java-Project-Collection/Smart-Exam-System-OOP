@@ -1,0 +1,10 @@
+What is OOP?,Object Oriented Programming,Operating Object Program,Online Object Processing,Open Oriented Programming,1
+Which concept allows data hiding?,Inheritance,Polymorphism,Encapsulation,Abstraction,3
+Which OOP concept allows one class to acquire properties of another?,Inheritance,Encapsulation,Abstraction,Constructor,1
+Which keyword is used to inherit a class in Java?,implements,extends,inherits,super,2
+What is Polymorphism?,Multiple Forms,Data Hiding,Code Duplication,Class Creation,1
+Which method is automatically called when an object is created?,Destructor,Main,Constructor,Getter,3
+Which access modifier provides the highest level of data hiding?,public,protected,private,default,3
+What is an object?,Blueprint of Class,Instance of Class,Method of Class,Variable of Class,2
+Which OOP concept focuses on showing only essential details?,Inheritance,Encapsulation,Abstraction,Polymorphism,3
+What is the parent class also called?,Child Class,Derived Class,Superclass,Subclass,3

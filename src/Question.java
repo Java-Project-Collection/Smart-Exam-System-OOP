@@ -1,12 +1,16 @@
 public class Question {
+
     private String questionText;
     private String[] options;
     private int correctAnswer;
 
-    public Question(String questionText, String[] options,int correctAnswer ) {
-        this.correctAnswer = correctAnswer;
-        this.options = options;
+    public Question(String questionText,
+                    String[] options,
+                    int correctAnswer) {
+
         this.questionText = questionText;
+        this.options = options;
+        this.correctAnswer = correctAnswer;
     }
 
     public String getQuestionText() {
@@ -21,19 +25,22 @@ public class Question {
         return correctAnswer;
     }
 
-    public void displayQuestion(){
-        System.out.println(questionText);
-        for (int i = 0; i < options.length; i++) {
-            System.out.println((i+1)+". "+options[i]);
+    public void displayQuestion() {
+
+        System.out.println("\n" + questionText);
+
+        for(int i = 0; i < options.length; i++) {
+            System.out.println((i + 1) + ". " + options[i]);
         }
     }
 
-    public boolean isCorrect(int userAnswer) {
-        return userAnswer == correctAnswer;
+    public boolean isCorrect(int answer) {
+        return answer == correctAnswer;
     }
 
     @Override
     public String toString() {
+
         return questionText + "," +
                 options[0] + "," +
                 options[1] + "," +

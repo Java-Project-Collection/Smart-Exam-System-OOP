@@ -2,70 +2,152 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ExamService {
-    private FileManager fileManager;
+
+    private FileManager fm;
     private Scanner sc;
 
-    public ExamService(FileManager fileManager, Scanner sc) {
-        this.fileManager = fileManager;
+    public ExamService(FileManager fm, Scanner sc) {
+        this.fm = fm;
         this.sc = sc;
     }
-    private int getValidInput() {
 
-        while(true) {
+    private int getAnswer() {
 
-            System.out.print("Enter Answer (1-4, 0 to skip): ");
+        while (true) {
 
-            if(sc.hasNextInt()) {
+            System.out.print("\nEnter Answer (1-4, 0 = Skip): ");
+
+            if (sc.hasNextInt()) {
 
                 int answer = sc.nextInt();
+                sc.nextLine();
 
-                if(answer >= 0 && answer <= 4) {
+                if (answer >= 0 && answer <= 4) {
                     return answer;
                 }
             }
+            else {
+                sc.nextLine();
+            }
 
-            System.out.println("Invalid Input!");
-            sc.nextLine();
+            System.out.println("Invalid Input! Try Again.");
         }
     }
-    public static String calculateGrade(int score) {
 
-        if(score >= 90)
+    private String calculateGrade(double percentage) {
+
+        if (percentage >= 85)
             return "A";
 
-        else if(score >= 80)
+        else if (percentage >= 80)
+            return "A-";
+
+        else if (percentage >= 75)
+            return "B+";
+
+        else if (percentage >= 70)
             return "B";
 
-        else if(score >= 70)
+        else if (percentage >= 65)
+            return "B-";
+
+        else if (percentage >= 61)
+            return "C+";
+
+        else if (percentage >= 58)
             return "C";
 
-        else if(score >= 60)
+        else if (percentage >= 55)
+            return "C-";
+
+        else if (percentage >= 50)
             return "D";
 
-        else if(score >= 50)
-            return "D-";
-
-        return "F";
+        else
+            return "F";
     }
-    public Result conductExam(Student student){
-        ArrayList<Question> questions = fileManager.loadQuestions();
 
-        int score=0;
-        for(Question q : questions){
+    public Result conductExam(Student student) {
+
+        ArrayList<Question> questions =
+                fm.loadQuestions();
+
+        if (questions.isEmpty()) {
+
+            System.out.println(
+                    "\nNo Questions Available!");
+
+            return null;
+        }
+
+        System.out.println("\n=================================");
+        System.out.println("          EXAM STARTED");
+        System.out.println("=================================");
+        System.out.println("Correct Answer : +4 Marks");
+        System.out.println("Wrong Answer   : -5 Marks");
+        System.out.println("Skipped Answer :  0 Marks");
+        System.out.println("=================================");
+
+        int score = 0;
+        int questionNumber = 1;
+
+        for (Question q : questions) {
+
+            System.out.println("\n---------------------------------");
+            System.out.println("Question " + questionNumber++);
+            System.out.println("---------------------------------");
+
             q.displayQuestion();
-            int answer = getValidInput();
 
-            if (answer==0) {
-                score+=0;
-            } else if (q.isCorrect(answer)){
-                score+=4;
-            } else{
-                score -=5;
+            int answer = getAnswer();
+
+            if (answer == 0) {
+
+                System.out.println("Question Skipped!");
+                continue;
+            }
+
+            if (q.isCorrect(answer)) {
+
+                score += 4;
+                System.out.println("Correct Answer! (+4)");
+            }
+            else {
+
+                score -= 5;
+                System.out.println("Wrong Answer! (-5)");
             }
         }
-        String grade = calculateGrade(score);
 
-        Result result = new Result(student.getUsername(),score,grade);
+        double maxMarks = questions.size() * 4.0;
+
+        double percentage =
+                (score * 100.0) / maxMarks;
+
+        if (percentage < 0) {
+            percentage = 0;
+        }
+
+        String grade =
+                calculateGrade(percentage);
+
+        Result result =
+                new Result(
+                        student.getUsername(),
+                        score,
+                        grade
+                );
+
+        fm.saveResult(result);
+
+        System.out.println("\n=================================");
+        System.out.println("         EXAM COMPLETED");
+        System.out.println("=================================");
+        System.out.printf("Percentage : %.2f%%\n",
+                percentage);
+        System.out.println("Grade      : " + grade);
+        System.out.println("=================================");
+
         return result;
     }
 }

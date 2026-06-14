@@ -2,11 +2,17 @@ public class Result {
 
     private String username;
     private int score;
+    private double percentage;
     private String grade;
 
-    public Result(String username, int score, String grade) {
+    public Result(String username,
+                  int score,
+                  double percentage,
+                  String grade) {
+
         this.username = username;
         this.score = score;
+        this.percentage = percentage;
         this.grade = grade;
     }
 
@@ -18,23 +24,20 @@ public class Result {
         return score;
     }
 
+    public double getPercentage() {
+        return percentage;
+    }
+
     public String getGrade() {
         return grade;
     }
 
-    public void displayResult() {
-
-        System.out.println("\n=================================");
-        System.out.println("            RESULT");
-        System.out.println("=================================");
-        System.out.println("Student : " + username);
-        System.out.println("Score   : " + score);
-        System.out.println("Grade   : " + grade);
-        System.out.println("=================================");
-    }
-
     @Override
     public String toString() {
-        return username + "," + score + "," + grade;
+
+        return username + "," +
+                score + "," +
+                percentage + "," +
+                grade;
     }
 }

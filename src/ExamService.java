@@ -12,16 +12,11 @@ public class ExamService {
     }
 
     private int getAnswer() {
-
         while (true) {
-
             System.out.print("\nEnter Answer (1-4, 0 = Skip): ");
-
             if (sc.hasNextInt()) {
-
                 int answer = sc.nextInt();
                 sc.nextLine();
-
                 if (answer >= 0 && answer <= 4) {
                     return answer;
                 }
@@ -29,54 +24,40 @@ public class ExamService {
             else {
                 sc.nextLine();
             }
-
             System.out.println("Invalid Input! Try Again.");
         }
     }
 
     private String calculateGrade(double percentage) {
-
-        if (percentage >= 85)
+        if (percentage >= 85) {
             return "A";
-
-        else if (percentage >= 80)
+        } else if (percentage >= 80) {
             return "A-";
-
-        else if (percentage >= 75)
+        } else if (percentage >= 75) {
             return "B+";
-
-        else if (percentage >= 70)
+        } else if (percentage >= 70) {
             return "B";
-
-        else if (percentage >= 65)
+        }else if (percentage >= 65) {
             return "B-";
-
-        else if (percentage >= 61)
+        }else if (percentage >= 61) {
             return "C+";
-
-        else if (percentage >= 58)
+        }else if (percentage >= 58) {
             return "C";
-
-        else if (percentage >= 55)
+        }else if (percentage >= 55) {
             return "C-";
-
-        else if (percentage >= 50)
+        }else if (percentage >= 50) {
             return "D";
-
-        else
+        }else {
             return "F";
+        }
     }
 
     public Result conductExam(Student student) {
-
-        ArrayList<Question> questions =
-                fm.loadQuestions();
+        ArrayList<Question> questions = fm.loadQuestions();
 
         if (questions.isEmpty()) {
-
             System.out.println(
                     "\nNo Questions Available!");
-
             return null;
         }
 
@@ -92,7 +73,6 @@ public class ExamService {
         int questionNumber = 1;
 
         for (Question q : questions) {
-
             System.out.println("\n---------------------------------");
             System.out.println("Question " + questionNumber++);
             System.out.println("---------------------------------");
@@ -100,20 +80,16 @@ public class ExamService {
             q.displayQuestion();
 
             int answer = getAnswer();
-
-            if (answer == 0) {
-
+            if (answer == 0){
                 System.out.println("Question Skipped!");
                 continue;
             }
 
-            if (q.isCorrect(answer)) {
-
+            if (q.isCorrect(answer)){
                 score += 4;
                 System.out.println("Correct Answer! (+4)");
             }
             else {
-
                 score -= 5;
                 System.out.println("Wrong Answer! (-5)");
             }
@@ -121,30 +97,22 @@ public class ExamService {
 
         double maxMarks = questions.size() * 4.0;
 
-        double percentage =
-                (score * 100.0) / maxMarks;
+        double percentage = (score * 100.0) / maxMarks;
 
         if (percentage < 0) {
             percentage = 0;
         }
 
-        String grade =
-                calculateGrade(percentage);
+        String grade = calculateGrade(percentage);
 
-        Result result =
-                new Result(
-                        student.getUsername(),
-                        score,
-                        grade
-                );
+        Result result = new Result(student.getUsername(), score,percentage,grade);
 
         fm.saveResult(result);
 
         System.out.println("\n=================================");
         System.out.println("         EXAM COMPLETED");
         System.out.println("=================================");
-        System.out.printf("Percentage : %.2f%%\n",
-                percentage);
+        System.out.printf("Percentage : %.2f%%\n", percentage);
         System.out.println("Grade      : " + grade);
         System.out.println("=================================");
 

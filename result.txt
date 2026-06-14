@@ -1,3 +1,1 @@
-huzaifa,0,F
-ali,22,F
-wahab,22,C-
+

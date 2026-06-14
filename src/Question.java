@@ -26,9 +26,7 @@ public class Question {
     }
 
     public void displayQuestion() {
-
         System.out.println("\n" + questionText);
-
         for(int i = 0; i < options.length; i++) {
             System.out.println((i + 1) + ". " + options[i]);
         }
@@ -40,7 +38,6 @@ public class Question {
 
     @Override
     public String toString() {
-
         return questionText + "," +
                 options[0] + "," +
                 options[1] + "," +

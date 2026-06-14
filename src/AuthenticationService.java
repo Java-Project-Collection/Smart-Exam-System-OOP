@@ -11,7 +11,6 @@ public class AuthenticationService {
         this.sc = sc;
     }
 
-    // ================= REGISTER =================
 
     public void registerStudent() {
 
@@ -38,8 +37,6 @@ public class AuthenticationService {
 
         System.out.println("\nRegistration Successful!");
     }
-
-    // ================= LOGIN =================
 
     public User login() {
 
@@ -75,5 +72,41 @@ public class AuthenticationService {
                 "\nInvalid Username or Password!");
 
         return null;
+    }
+    public User login(
+            String username,
+            String password) {
+
+        ArrayList<User> users =
+                fm.loadUsers();
+
+        for (User user : users) {
+
+            if (user.getUsername()
+                    .equalsIgnoreCase(username)
+                    &&
+                    user.getPassword()
+                            .equals(password)) {
+
+                return user;
+            }
+        }
+
+        return null;
+    }
+    public boolean registerStudent(
+            String username,
+            String password) {
+
+        if (fm.usernameExists(username)) {
+            return false;
+        }
+
+        Student student =
+                new Student(username, password);
+
+        fm.saveUser(student);
+
+        return true;
     }
 }

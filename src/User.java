@@ -18,10 +18,6 @@ public class User {
         return password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
     @Override
     public String toString() {
         return username + "," + password + "," + role;

@@ -17,7 +17,7 @@ public class RegisterFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(3,2,10,10));
+        setLayout(new GridLayout(4,2,10,10));
 
         add(new JLabel("Username"));
         usernameField = new JTextField();
@@ -28,10 +28,19 @@ public class RegisterFrame extends JFrame {
         add(passwordField);
 
         JButton registerButton = new JButton("Register");
+        JButton exitButton = new JButton("Cancel");
+
         add(registerButton);
+        add(exitButton);
+
+        add(new JLabel(""));
+        add(new JLabel(""));
 
         registerButton.addActionListener(e -> registerStudent());
-
+        exitButton.addActionListener(e ->{
+                dispose();
+                new WelcomeFrame();
+        });
         setVisible(true);
     }
     private void registerStudent(){
@@ -46,6 +55,8 @@ public class RegisterFrame extends JFrame {
                 auth.registerStudent(username, password);
         if (success){
             JOptionPane.showMessageDialog(this,"Registration Successfully");
+            dispose();
+            new LoginFrame();
         }else {
             JOptionPane.showMessageDialog(this,"Username Already Exists");
         }

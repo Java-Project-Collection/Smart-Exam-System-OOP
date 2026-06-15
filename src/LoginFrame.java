@@ -10,6 +10,7 @@ public class LoginFrame extends JFrame {
     private AuthenticationService auth;
 
     public LoginFrame() {
+
         fm = new FileManager();
         auth = new AuthenticationService(fm, null);
 
@@ -17,7 +18,8 @@ public class LoginFrame extends JFrame {
         setSize(450, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(3, 2, 10, 10));
+
+        setLayout(new GridLayout(4, 2, 10, 10));
 
         add(new JLabel("Username:"));
         usernameField = new JTextField();
@@ -28,30 +30,62 @@ public class LoginFrame extends JFrame {
         add(passwordField);
 
         JButton loginButton = new JButton("Login");
-        JButton registerButton = new JButton("Register");
+        JButton exitButton = new JButton("Exit");
+
         add(loginButton);
-        add(registerButton);
+        add(exitButton);
 
         loginButton.addActionListener(e -> login());
-        registerButton.addActionListener(
-                e -> new RegisterFrame()
-        );
+
+        exitButton.addActionListener(e -> {
+
+            int choice = JOptionPane.showConfirmDialog(
+                    this,
+                    "Exit Application?",
+                    "Confirm Exit",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (choice == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        });
+
         setVisible(true);
     }
+
     private void login() {
+
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword());
+
         User user = auth.login(username, password);
 
         if (user == null) {
-            JOptionPane.showMessageDialog(this, "Invalid Username or Password!");
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Invalid Username or Password!"
+            );
+
             return;
         }
+
         Result oldResult = fm.getResult(user.getUsername());
+
         dispose();
+
         if (oldResult != null) {
-            new ResultFrame(oldResult.getUsername(), oldResult.getScore(), oldResult.getPercentage(), oldResult.getGrade());
+
+            new ResultFrame(
+                    oldResult.getUsername(),
+                    oldResult.getScore(),
+                    oldResult.getPercentage(),
+                    oldResult.getGrade()
+            );
+
         } else {
+
             new ExamFrame(user);
         }
     }
